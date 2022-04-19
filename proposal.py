@@ -11,14 +11,9 @@ spit out all or a of subset of the folder's contents as a
 list. This list will be input into the Renamer later.
 
 Now, create a Renamer object with your scheme. This object
-will be used to execute the renaming. Or rather, instruct
-each file to rename itself a spefic name. 
-
-the scheme is broken up into all those classes to make it 
-more readable and easier to understand when you were 
-coding. The alternative was having all the data that is 
-stored in those objects is be an input to the constructor 
-of the 
+will be used to execute the renaming. Or rather, using the 
+helper methods in the Renamer object, we instruct each file 
+to rename itself a spefic name based on a given name scheme. 
 """
 
 
@@ -107,6 +102,10 @@ class Scheme:
         A Scheme has a base, a prefix object, a suffix object, 
         and a replacement object.
 
+        Developers should think of these parameters as their 
+        different options using this class. They can have all or 
+        one or some combination. 
+
         Developers can use both prefixes and suffixes or neither 
         if they want all files to be named the same as the base.
 
@@ -118,6 +117,16 @@ class Scheme:
         and a replacement then this system should make the 
         replacement, then set the new name to the base for the pefix
         or suffix.
+
+
+        ~thoughts on design~
+        The scheme is broken up into all those classes to make it 
+        more readable and easier to understand when you were 
+        coding. The alternative was having all the data that is 
+        stored in those objects be a parameter in the constructor 
+        of the scheme class, which would be unwieldy and might be 
+        harder for a developer to conceptualize without more 
+        concrete boundaries.
         """
         # initialize member variables.
         self.base = base
