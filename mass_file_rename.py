@@ -1,4 +1,4 @@
-"""Mass File Renamer
+"""Mass File Rename
 By Anthony, Nic, George, and Conor
 
 If you want to rename some files, first determine your
