@@ -19,19 +19,28 @@ use the provided naming scheme to rename the files.
 
 class File:
 
-    # relevant data about a file
-    name = ''
-    ext = ''
-    path = ''
-
-    def __init__(self, path):
+    def __init__(self, path=''):
         """File object
         An instance of this class represents a file.
         A file has a name, path, and extension.
         All a file can do is change it's own name.
         """
         self.path = path
-        # derive the name and extension from the path
+        self.name = self.get_name_from_path()
+        self.ext = self.get_ext_from_path
+
+    def get_ext_from_path(self):
+        """Get Extension From Path 
+        Get the extension of this file from the path of this
+        file.
+        """
+        pass
+
+    def get_name_from_path(self):
+        """Get Name From Path 
+        Get the name of this file from the path of this file.
+        """
+        pass
 
     def change_name_to(self, new_name):
         """Changes this file's name to new_name.
@@ -42,12 +51,6 @@ class File:
 
 class Folder:
 
-    # relevant data about a folder
-    name = ''
-    path = ''
-    files = []
-    subfolders = []
-
     def __init__(self, path):
         """Folder object
         An instance of this class represents a Folder.
@@ -55,32 +58,54 @@ class Folder:
         and list of files it contains.
         A folder can rename all the files to a spefic
         """
+
+        # initialize member variables.
         self.path = path
-        # derive the name from the path
-        # read in all files contained in this folder for files
+        self.name = self.get_name_from_path()
+        self.files, self.subfolders = self.read_in_contents()
+
+    def get_name_from_path(self):
+        """Set Name From Path
+        Get the name of this folder
+        """
+        pass
+
+    def read_in_contents(self):
+        """Read in Files
+        Reads in the data from all files and folders in this folder's
+        path. 
+        Returns a list of files and a list of subfolders.
+        """
+        pass
+
+    def get_all_with_ext(self, criteria):
+        """Get all with Extension
+        Returns a list of all files in this folder with an extension
+        that matches the given criteria.
+        """
+        pass
+
+    def get_all_contains(self, criteria):
+        """Get all Contains
+        Returns a list of all files in this folder with a name that
+        contains the given criteria.
+        """
+        pass
 
 
 class Scheme:
 
-    # relevant data about a scheme
-    base = ''
-    prefix_start = ''
-    suffix_start = ''
-    change_prefix_by = ''
-    change_suffix_by = ''
-
-    def __init__(self, base='', prefix_start='', suffix_start='',
-                 change_prefix_by='', change_suffix_by=''):
+    def __init__(self, base=None, prefix=None, suffix=None, replacement=None):
         """Scheme object
         An instance of this class represents a naming scheme.
         A Scheme has a base, prefix, suffix, and how to change
         the prefix/suffix with each new file.
 
         So if you want to name your files image1, image2, etc.,
-        your base = image, your suffix_start = 1, and 
+        your base = 'image', your suffix_start = 1, and 
         change_suffix_by = 1. 
         If you want to name your files image200, image199, etc.,
-        your base = image, your suffix_start = 200, and 
+        your base = 'image', your suffix_start = 200, and 
         change_suffix_by = -1. 
 
         So if you want to name your files imagea, imageb, etc.,
@@ -95,39 +120,87 @@ class Scheme:
         files to be names the same as the base.
         """
         self.base = base
-        self.prefix_start = prefix_start
-        self.suffix_start = suffix_start
-        self.change_prefix_by = change_prefix_by
-        self.change_suffix_by = change_suffix_by
+        self.prefix = prefix
+        self.suffix = suffix
+        self.replacement = replacement
 
 
 class Renamer:
 
     def __init__(self, scheme):
         """Renamer object
-        An instance of this class represents an object used to re.
-        A folder has a naming scheme that dictates the way files
-        are renamed.
+        An instance of this class represents an object used to
+        help rename files in bulk. A Renamer has a naming scheme 
+        that dictates the way files are renamed.
         """
         self.scheme = scheme
 
-    def rename_all(self, new_name, files):
-        """Changes all the names of all files in this folder to 
-        new_name.
+    def rename_all(self, files):
+        """Changes all the names of all files in the given list to 
+        the new name from this object's name scheme.
         Returns nothing.
         """
         pass
 
-    def rename_if_contains(self, criteria, new_name, files):
+    def rename_if_contains(self, criteria, files):
         """Changes all the names of all files in this folder that 
-        match a given name criteria to new_name.
+        contain a given name criteria to the new name from this
+        object's name scheme.
         Returns nothing.
         """
         pass
 
-    def rename_if_ext(self, criteria, new_name, files):
+    def rename_if_ext(self, criteria, files):
         """Changes all the names of all files in this folder that 
-        match a given extension criteria to new_name.
+        match a given extension criteria to the new name from this
+        object's name scheme.
         Returns nothing.
         """
         pass
+
+
+class Prefix:
+
+    def __init__(self, identifier='', separator='', change=None):
+        """Prefix object
+        An instance of this class represents a prefix of a name in a
+        name scheme. It has a identifier, a separator, and the change
+        over time. The change over time can be None, which will not 
+        change 
+
+        For example, in name scheme 
+        """
+        self.identifier = identifier
+        self.separator = separator
+        self.change = change
+
+
+class Suffix:
+
+    def __init__(self, identifier='', separator='', change=None):
+        """Suffix object
+        An instance of this class represents a suffix of a name in a
+        name scheme. It has a identifier, a separator, and the change
+        over time. The change over time can be None, which will not 
+        change 
+
+        For example, in name scheme 
+        """
+        self.identifier = identifier
+        self.separator = separator
+        self.change = change
+
+
+class Replacement:
+
+    def __init__(self, criteria, replace, text_type):
+        """Replacement object
+        An instance of this class represents the data in a replacement.
+        A replacement consists of the criteria for a substring to be replaced
+        and the string to replace it with. It also has the text_type, which 
+        indicates if this replacement is happening to the file's extension,
+        name or both. 
+        """
+        self.criteria = criteria
+        self.replace = replace
+        self.text_type = text_type
