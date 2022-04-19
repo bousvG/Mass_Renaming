@@ -175,11 +175,9 @@ class Prefix:
     def __init__(self, identifier='', separator='', change=None):
         """Prefix object
         An instance of this class represents a prefix of a name in a
-        name scheme. It has a identifier, a separator, and the change
-        over time. The change over time can be None, which will not 
-        change 
-
-        For example, in name scheme 
+        name scheme. It has a identifier, a separator, and the increment
+        of change over time. The change over time can be None, which will 
+        not change.
         """
         # initialize member variables.
         self.identifier = identifier
@@ -192,11 +190,9 @@ class Suffix:
     def __init__(self, identifier='', separator='', change=None):
         """Suffix object
         An instance of this class represents a suffix of a name in a
-        name scheme. It has a identifier, a separator, and the change
-        over time. The change over time can be None, which will not 
-        change 
-
-        For example, in name scheme 
+        name scheme. It has a identifier, a separator, and the increment
+        of change over time. The change over time can be None, which will 
+        not change.
         """
         # initialize member variables.
         self.identifier = identifier
@@ -218,3 +214,27 @@ class Replacement:
         self.criteria = criteria
         self.replace = replace
         self.text_type = text_type
+
+
+# main is strictly for testing purposes and should not be included in the final
+# submission.
+def main():
+    """Example Use Case
+    For the name scheme 'image_1', 'image_2', etc., we can use the following code.
+    """
+
+    # define the files you want renamed
+    fol = Folder(path='./images/')
+    list_of_files = fol.get_all_with_ext('jpg')
+
+    # define how you want the files renamed
+    suf = Suffix(identifier=1, separator='_', change=1)
+    sch = Scheme(base='image', suffix=suf)
+
+    # rename the files
+    ren = Renamer(sch)
+    ren.rename_all(list_of_files)
+
+
+if __name__ == "__main__":
+    main()
