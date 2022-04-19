@@ -1,6 +1,5 @@
-"""Conor's proposal.
-I wanted to flesh out the structure of the package. I think a few classes
-would help us organize our code better. Here's what I came up with:
+"""Mass File Renamer
+By Anthony, Nic, George, and Conor
 
 If you want to rename some files, first determine your
 naming scheme. Create a Scheme object that reflects this 
@@ -8,12 +7,18 @@ scheme.
 
 Next, create Folder objects that represent the folders 
 where your files are. You can use these folder objects to
-spit out a of subset of the folder's contents to be renamed.
+spit out all or a of subset of the folder's contents as a 
+list. This list will be input into the Renamer later.
 
 Now, create a Renamer object with your scheme. This object
 will be used to execute the renaming. Or rather, instruct
-each file to rename itself a spefic name. The renamer will
-use the provided naming scheme to rename the files.
+each file to rename itself a spefic name. 
+
+the scheme is broken up into all those classes to make it 
+more readable and easier to understand when you were 
+coding. The alternative was having all the data that is 
+stored in those objects is be an input to the constructor 
+of the 
 """
 
 
@@ -25,6 +30,7 @@ class File:
         A file has a name, path, and extension.
         All a file can do is change it's own name.
         """
+        # initialize member variables.
         self.path = path
         self.name = self.get_name_from_path()
         self.ext = self.get_ext_from_path
@@ -104,8 +110,16 @@ class Scheme:
         Developers can use both prefixes and suffixes or neither 
         if they want all files to be named the same as the base.
 
-
+        Developers can also choose to ommit the base and include 
+        a replacement object. This will replace a string with 
+        another specified string where it is found in a the file 
+        name or file extension. 
+        If the base is left as None but there is a prefix or suffix
+        and a replacement then this system should make the 
+        replacement, then set the new name to the base for the pefix
+        or suffix.
         """
+        # initialize member variables.
         self.base = base
         self.prefix = prefix
         self.suffix = suffix
@@ -120,6 +134,7 @@ class Renamer:
         help rename files in bulk. A Renamer has a naming scheme 
         that dictates the way files are renamed.
         """
+        # initialize member variables.
         self.scheme = scheme
 
     def rename_all(self, files):
@@ -157,6 +172,7 @@ class Prefix:
 
         For example, in name scheme 
         """
+        # initialize member variables.
         self.identifier = identifier
         self.separator = separator
         self.change = change
@@ -173,6 +189,7 @@ class Suffix:
 
         For example, in name scheme 
         """
+        # initialize member variables.
         self.identifier = identifier
         self.separator = separator
         self.change = change
@@ -188,6 +205,7 @@ class Replacement:
         indicates if this replacement is happening to the file's extension,
         name or both. 
         """
+        # initialize member variables.
         self.criteria = criteria
         self.replace = replace
         self.text_type = text_type
