@@ -98,26 +98,13 @@ class Scheme:
     def __init__(self, base=None, prefix=None, suffix=None, replacement=None):
         """Scheme object
         An instance of this class represents a naming scheme.
-        A Scheme has a base, prefix, suffix, and how to change
-        the prefix/suffix with each new file.
+        A Scheme has a base, a prefix object, a suffix object, 
+        and a replacement object.
 
-        So if you want to name your files image1, image2, etc.,
-        your base = 'image', your suffix_start = 1, and 
-        change_suffix_by = 1. 
-        If you want to name your files image200, image199, etc.,
-        your base = 'image', your suffix_start = 200, and 
-        change_suffix_by = -1. 
+        Developers can use both prefixes and suffixes or neither 
+        if they want all files to be named the same as the base.
 
-        So if you want to name your files imagea, imageb, etc.,
-        your base = image, your suffix_start = a, and 
-        change_suffix_by = 1. 
-        If you want to name your files imagez, imagey, etc.,
-        your base = image, your suffix_start = z, and 
-        change_suffix_by = -1. 
 
-        Same same rules apply to prefixes. User can use both
-        prefixes and suffixes or neither if they want all
-        files to be names the same as the base.
         """
         self.base = base
         self.prefix = prefix
