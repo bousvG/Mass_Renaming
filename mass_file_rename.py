@@ -16,35 +16,50 @@ helper methods in the Renamer object, we instruct each file
 to rename itself a spefic name based on a given name scheme. 
 """
 
+import os
+
 
 class File:
 
-    def __init__(self, path=''):
+    def __init__(self, file_path=''):
         """File object
         An instance of this class represents a file.
         A file has a name, path, and extension.
         All a file can do is change it's own name.
+        Comprised of a path, root_path, name, and ext.
         """
         # initialize member variables.
-        self.path = path
-        self.name = self.get_name_from_path()
-        self.ext = self.get_ext_from_path()
+        self.file_path = file_path
+        self.set_name_ext_root_dir()
 
-    def get_ext_from_path(self):
-        """Get Extension From Path 
-        Get the extension of this file from the path of this
-        file.
+    def set_name_ext_root_dir(self):
+        """Set Name and Extension
+        Set the extension, name, and root directory of
+        this file based on self.file_path
         """
-        pass
+        split_file = os.path.splitext(self.file_path)
+        self.ext = split_file[1]
+        self.root_dir, self.name = os.path.split(split_file[0])
 
-    def get_name_from_path(self):
-        """Get Name From Path 
-        Get the name of this file from the path of this file.
+    def change_name_to(self, new_name=''):
+        """Change Name to
+        Changes this file's name to new_name.
+        Returns nothing.
         """
-        pass
+        # create the new file path root_dir with new_name
+        renamed_file_path = os.path.join(
+            self.root_dir, f"{new_name}{self.ext}")
 
-    def change_name_to(self, new_name):
-        """Changes this file's name to new_name.
+        # execute rename of file in system
+        os.rename(self.file_path, renamed_file_path)
+
+        # set new name, path, and ext for this file obj
+        self.file_path = renamed_file_path
+        self.set_name_ext_root_dir()
+
+    def change_ext_to(self, new_ext=''):
+        """Change Extension to
+        Changes this file's extension to new_ext.
         Returns nothing.
         """
         pass
@@ -138,14 +153,16 @@ class Renamer:
         self.scheme = scheme
 
     def rename_all(self, files):
-        """Changes all the names of all files in the given list to 
+        """Rename All
+        Changes all the names of all files in the given list to 
         the new name from this object's name scheme.
         Returns nothing.
         """
         pass
 
     def rename_if_contains(self, criteria, files):
-        """Changes all the names of all files in this folder that 
+        """Rename If Contains
+        Changes all the names of all files in this folder that 
         contain a given name criteria to the new name from this
         object's name scheme.
         Returns nothing.
@@ -153,7 +170,8 @@ class Renamer:
         pass
 
     def rename_if_ext(self, criteria, files):
-        """Changes all the names of all files in this folder that 
+        """Rename If Extension
+        Changes all the names of all files in this folder that 
         match a given extension criteria to the new name from this
         object's name scheme.
         Returns nothing.
@@ -164,7 +182,7 @@ class Renamer:
 class Prefix:
 
     def __init__(self, identifier='', separator='', change=None):
-        """Prefix object
+        """Prefix Object
         An instance of this class represents a prefix of a name in a
         name scheme. It has a identifier, a separator, and the increment
         of change over time. The change over time can be None, which will 
@@ -179,7 +197,7 @@ class Prefix:
 class Suffix:
 
     def __init__(self, identifier='', separator='', change=None):
-        """Suffix object
+        """Suffix Object
         An instance of this class represents a suffix of a name in a
         name scheme. It has a identifier, a separator, and the increment
         of change over time. The change over time can be None, which will 
@@ -194,7 +212,7 @@ class Suffix:
 class Replacement:
 
     def __init__(self, criteria, replace, text_type):
-        """Replacement object
+        """Replacement Object
         An instance of this class represents the data in a replacement.
         A replacement consists of the criteria for a substring to be replaced
         and the string to replace it with. It also has the text_type, which 
