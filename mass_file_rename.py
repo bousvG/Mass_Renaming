@@ -28,7 +28,7 @@ class File:
         # initialize member variables.
         self.path = path
         self.name = self.get_name_from_path()
-        self.ext = self.get_ext_from_path
+        self.ext = self.get_ext_from_path()
 
     def get_ext_from_path(self):
         """Get Extension From Path 
@@ -113,20 +113,11 @@ class Scheme:
         a replacement object. This will replace a string with 
         another specified string where it is found in a the file 
         name or file extension. 
+
         If the base is left as None but there is a prefix or suffix
         and a replacement then this system should make the 
         replacement, then set the new name to the base for the pefix
         or suffix.
-
-
-        ~thoughts on design~
-        The scheme is broken up into all those classes to make it 
-        more readable and easier to understand when you were 
-        coding. The alternative was having all the data that is 
-        stored in those objects be a parameter in the constructor 
-        of the scheme class, which would be unwieldy and might be 
-        harder for a developer to conceptualize without more 
-        concrete boundaries.
         """
         # initialize member variables.
         self.base = base
@@ -220,7 +211,8 @@ class Replacement:
 # submission.
 def main():
     """Example Use Case
-    For the name scheme 'image_1', 'image_2', etc., we can use the following code.
+    For the name scheme 'image_1', 'image_2', etc., 
+    we can use the following code.
     """
 
     # define the files you want renamed
