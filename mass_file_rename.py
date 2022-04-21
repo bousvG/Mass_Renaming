@@ -74,7 +74,6 @@ class Folder:
         and list of files it contains.
         A folder can rename all the files to a spefic
         """
-
         # initialize member variables.
         self.path = path
         self.name = self.get_name_from_path()
@@ -233,6 +232,7 @@ class NumericalIdentifier:
         current identifier parameter and the increment and character length in this
         object. 
         """
+        pass
 
 
 class AlphabeticalIdentifier:
