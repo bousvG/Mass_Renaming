@@ -22,7 +22,7 @@ import os
 class File:
 
     def __init__(self, file_path=''):
-        """File object
+        """File Object
         An instance of this class represents a file.
         A file has a name, path, and extension.
         All a file can do is change it's own name.
@@ -33,7 +33,7 @@ class File:
         self.set_name_ext_root_dir()
 
     def set_name_ext_root_dir(self):
-        """Set Name and Extension
+        """Set Name, Extension, and Root Directory
         Set the extension, name, and root directory of
         this file based on self.file_path
         """
@@ -42,7 +42,7 @@ class File:
         self.root_dir, self.name = os.path.split(split_file[0])
 
     def change_name_to(self, new_name=''):
-        """Change Name to
+        """Change Name to New Name
         Changes this file's name to new_name.
         Returns nothing.
         """
@@ -58,7 +58,7 @@ class File:
         self.set_name_ext_root_dir()
 
     def change_ext_to(self, new_ext=''):
-        """Change Extension to
+        """Change Extension to New Extension
         Changes this file's extension to new_ext.
         Returns nothing.
         """
@@ -68,7 +68,7 @@ class File:
 class Folder:
 
     def __init__(self, path):
-        """Folder object
+        """Folder Object
         An instance of this class represents a Folder.
         A folder has a name, path, a list of folders it contains, 
         and list of files it contains.
@@ -81,14 +81,14 @@ class Folder:
         self.files, self.subfolders = self.read_in_contents()
 
     def get_name_from_path(self):
-        """Set Name From Path
+        """Get Name From Path
         Get the name of this folder
         """
         pass
 
     def read_in_contents(self):
-        """Read in Files
-        Reads in the data from all files and folders in this folder's
+        """Read in Contents
+        Reads in the data from all files and subfolders in this folder's
         path. 
         Returns a list of files and a list of subfolders.
         """
@@ -112,16 +112,16 @@ class Folder:
 class Scheme:
 
     def __init__(self, base=None, prefix=None, suffix=None, replacement=None):
-        """Scheme object
+        """Scheme Object
         An instance of this class represents a naming scheme.
         A Scheme has a base, a prefix object, a suffix object, 
         and a replacement object.
 
         Developers should think of these parameters as their 
         different options using this class. They can have all or 
-        one or some combination. 
+        one or some combination of the four. 
 
-        Developers can use both prefixes and suffixes or neither 
+        Developers can use both prefixes and suffixes, or neither 
         if they want all files to be named the same as the base.
 
         Developers can also choose to ommit the base and include 
@@ -144,7 +144,7 @@ class Scheme:
 class Renamer:
 
     def __init__(self, scheme):
-        """Renamer object
+        """Renamer Object
         An instance of this class represents an object used to
         help rename files in bulk. A Renamer has a naming scheme 
         that dictates the way files are renamed.
