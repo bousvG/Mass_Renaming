@@ -19,10 +19,13 @@ class TestFile(unittest.TestCase):
         to be sure. I will probably add something to automatically
         reset it later. 
         """
-
+        # get the directory of this project
         current_dir = os.path.dirname(__file__)
+
+        # append the path to the test file
         file_path = os.path.join(current_dir, './practice_files/test1.txt')
 
+        # create test file object and execute naming
         test_file_obj = File(file_path)
         test_file_obj.change_name_to("tester")
 
