@@ -50,12 +50,20 @@ class File:
         renamed_file_path = os.path.join(
             self.root_dir, f"{new_name}{self.ext}")
 
-        # execute rename of file in system
-        os.rename(self.file_path, renamed_file_path)
+        # if self.file_path is a file that exists
+        if os.path.isfile(self.file_path):
+            # if new_name is not already taken
+            if not os.path.isfile(renamed_file_path):
+                # execute rename of file in system
+                os.rename(self.file_path, renamed_file_path)
 
-        # set new name, path, and ext for this file obj
-        self.file_path = renamed_file_path
-        self.set_name_ext_root_dir()
+                # set new name, path, and ext for this file obj
+                self.file_path = renamed_file_path
+                self.set_name_ext_root_dir()
+            else:
+                print(f"~~~NAME '{new_name}{self.ext}' ALREADY TAKEN~~~")
+        else:
+            print(f"~~~NO FILE FOUND AT '{self.file_path}'~~~")
 
     def change_ext_to(self, new_ext=''):
         """Change Extension to New Extension

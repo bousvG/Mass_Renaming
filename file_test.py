@@ -1,6 +1,3 @@
-from ast import Assert
-from cgi import test
-from genericpath import isfile
 import unittest
 import os
 from mass_file_rename import File, Folder, Renamer, Scheme
