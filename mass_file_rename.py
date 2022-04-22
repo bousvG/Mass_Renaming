@@ -2,20 +2,21 @@
 By Anthony, Nic, George, and Conor
 
 If you want to rename some files, first determine your
-naming scheme. Create a Scheme object that reflects this 
+naming scheme. Create a Scheme object that reflects this
 scheme.
 
-Next, create Folder objects that represent the folders 
+Next, create Folder objects that represent the folders
 where your files are. You can use these folder objects to
-spit out all or a of subset of the folder's contents as a 
+spit out all or a of subset of the folder's contents as a
 list. This list will be input into the Renamer later.
 
 Now, create a Renamer object with your scheme. This object
-will be used to execute the renaming. Or rather, using the 
-helper methods in the Renamer object, we instruct each file 
-to rename itself a spefic name based on a given name scheme. 
+will be used to execute the renaming. Or rather, using the
+helper methods in the Renamer object, we instruct each file
+to rename itself a spefic name based on a given name scheme.
 """
 
+from calendar import c
 import os
 
 
@@ -78,7 +79,7 @@ class Folder:
     def __init__(self, path):
         """Folder Object
         An instance of this class represents a Folder.
-        A folder has a name, path, a list of folders it contains, 
+        A folder has a name, path, a list of folders it contains,
         and list of files it contains.
         A folder can rename all the files to a spefic
         """
@@ -96,7 +97,7 @@ class Folder:
     def read_in_contents(self):
         """Read in Contents
         Reads in the data from all files and subfolders in this folder's
-        path. 
+        path.
         Returns a list of files and a list of subfolders.
         """
         pass
@@ -116,28 +117,66 @@ class Folder:
         pass
 
 
+class Renamer:
+
+    def __init__(self, scheme):
+        """Renamer Object
+        An instance of this class represents an object used to
+        help rename files in bulk. A Renamer has a naming scheme
+        that dictates the way files are renamed.
+        """
+        # initialize member variables.
+        self.scheme = scheme
+
+    def rename_all(self, files):
+        """Rename All
+        Changes all the names of all files in the given list to
+        the new name from this object's name scheme.
+        Returns nothing.
+        """
+        pass
+
+    def rename_if_contains(self, criteria, files):
+        """Rename If Contains
+        Changes all the names of all files in this folder that
+        contain a given name criteria to the new name from this
+        object's name scheme.
+        Returns nothing.
+        """
+        pass
+
+    def rename_if_ext(self, criteria, files):
+        """Rename If Extension
+        Changes all the names of all files in this folder that
+        match a given extension criteria to the new name from this
+        object's name scheme.
+        Returns nothing.
+        """
+        pass
+
+
 class Scheme:
 
     def __init__(self, root=None, prefix=None, suffix=None, replacement=None):
         """Scheme Object
         An instance of this class represents a naming scheme.
-        A Scheme has a root, a prefix object, a suffix object, 
+        A Scheme has a root, a prefix object, a suffix object,
         and a replacement object.
 
-        Developers should think of these parameters as their 
-        different options using this class. They can have all or 
-        one or some combination of the four. 
+        Developers should think of these parameters as their
+        different options using this class. They can have all or
+        one or some combination of the four.
 
-        Developers can use both prefixes and suffixes, or neither 
+        Developers can use both prefixes and suffixes, or neither
         if they want all files to be named the same as the root.
 
-        Developers can also choose to ommit the root and include 
-        a replacement object. This will replace a string with 
-        another specified string where it is found in a the file 
-        name or file extension. 
+        Developers can also choose to ommit the root and include
+        a replacement object. This will replace a string with
+        another specified string where it is found in a the file
+        name or file extension.
 
         If the root is left as None but there is a prefix or suffix
-        and a replacement then this system should make the 
+        and a replacement then this system should make the
         replacement, then set the new name to the root for the pefix
         or suffix.
         """
@@ -147,41 +186,43 @@ class Scheme:
         self.suffix = suffix
         self.replacement = replacement
 
+    def construct_new_name(self, file_name):
+        """Construct New Name
+        This method will contruct and return the next name in this name
+        scheme. File name may not be needed for some name schemes.
+        Returns new name.
+        """
+        pass
 
-class Renamer:
 
-    def __init__(self, scheme):
-        """Renamer Object
-        An instance of this class represents an object used to
-        help rename files in bulk. A Renamer has a naming scheme 
-        that dictates the way files are renamed.
+class Replacement:
+
+    def __init__(self, criteria, replace, text_type):
+        """Replacement Object
+        An instance of this class represents the data in a replacement.
+        A replacement consists of the criteria for a substring to be replaced
+        and the string to replace it with. It also has the text_type, which
+        indicates if this replacement is happening to the file's extension,
+        name or both.
         """
         # initialize member variables.
-        self.scheme = scheme
+        self.criteria = criteria
+        self.replace = replace
+        self.text_type = text_type
 
-    def rename_all(self, files):
-        """Rename All
-        Changes all the names of all files in the given list to 
-        the new name from this object's name scheme.
-        Returns nothing.
+    def get_new_name(self, current_name):
+        """Get New Name
+        This method will replace whatever substring in the current_name specified
+        by this class' criteria value with this class' replace value.
+        Returns this modified version of current_name.
         """
         pass
 
-    def rename_if_contains(self, criteria, files):
-        """Rename If Contains
-        Changes all the names of all files in this folder that 
-        contain a given name criteria to the new name from this
-        object's name scheme.
-        Returns nothing.
-        """
-        pass
-
-    def rename_if_ext(self, criteria, files):
-        """Rename If Extension
-        Changes all the names of all files in this folder that 
-        match a given extension criteria to the new name from this
-        object's name scheme.
-        Returns nothing.
+    def get_new_ext(self, current_ext):
+        """Get New Extension
+        This method will replace whatever substring in the current_ext specified
+        by this class' criteria value with this class' replace value.
+        Returns this modified version of current_ext.
         """
         pass
 
@@ -191,16 +232,23 @@ class Prefix:
     def __init__(self, identifier=None, separator=''):
         """Prefix Object
         An instance of this class represents a prefix of a name in a
-        name scheme. It has a identifier and a separator. 
+        name scheme. It has a identifier and a separator.
 
-        The identifier can be a just a string, or it can be one of the 
-        Identifier classes in this package (NumericalIdentifier and 
-        AlphabeticalIdentifier). The separator must be a string and can 
+        The identifier can be a just a string, or it can be one of the
+        Identifier classes in this package (NumericalIdentifier and
+        AlphabeticalIdentifier). The separator must be a string and can
         be left as whitespace if it is not needed.
         """
         # initialize member variables.
         self.identifier = identifier
         self.separator = separator
+
+    def get_new_prefix(self, current_name):
+        """Get New Prefix
+        This method will return the combination of this class' separator
+        whatever the next identifier value is.
+        """
+        pass
 
 
 class Suffix:
@@ -208,16 +256,23 @@ class Suffix:
     def __init__(self, identifier=None, separator=''):
         """Suffix Object
         An instance of this class represents a suffix of a name in a
-        name scheme. It has a identifier and a separator. 
+        name scheme. It has a identifier and a separator.
 
-        The identifier can be a just a string, or it can be one of the 
-        Identifier classes in this package (NumericalIdentifier and 
-        AlphabeticalIdentifier). The separator must be a string and can 
+        The identifier can be a just a string, or it can be one of the
+        Identifier classes in this package (NumericalIdentifier and
+        AlphabeticalIdentifier). The separator must be a string and can
         be left as whitespace if it is not needed.
         """
         # initialize member variables.
         self.identifier = identifier
         self.separator = separator
+
+    def get_new_suffix(self, current_name):
+        """Get New Suffix
+        This method will return the combination of this class' separator
+        whatever the next identifier value is.
+        """
+        pass
 
 
 class NumericalIdentifier:
@@ -225,20 +280,21 @@ class NumericalIdentifier:
     def __init__(self, start=1, increment=1, character_length=None):
         """Numerical Identifier Object
         An instance of this class represents an identifier for a suffix or
-        prefix that increases a number over time. This number has a starting 
-        value, a number to increment by for each sequential naming, and a 
-        character length that the identifier will adhere to (EX: length 4 would 
+        prefix that increases a number over time. This number has a starting
+        value, a number to increment by for each sequential naming, and a
+        character length that the identifier will adhere to (EX: length 4 would
         look like 0001, 0002, 0003, etc. Length None is the normal 1, 2, 3, etc.).
         """
         self.start = start
         self.increment = increment
         self.character_length = character_length
+        self.current_identifier_value = None
 
-    def get_next_id(self, current_id):
-        """Get Next Identifier
-        This method will return the next identifier in the sequence based on the 
-        current identifier parameter and the increment and character length in this
-        object. 
+    def increment_id(self):
+        """Increment Identifier
+        This method will increase this object's current identifier value by the 
+        interval specified by the 'increment' member variable. 
+        Returns nothing.
         """
         pass
 
@@ -248,36 +304,43 @@ class AlphabeticalIdentifier:
     def __init__(self, start='A', increment=1, caps=True):
         """Alphabetical Identifier Object
         An instance of this class represents an identifier for a suffix or
-        prefix that increases a letter over time. This letter has a starting 
-        value, a number of letters to increment by for each sequential naming, 
-        and a value that represents whether or not this identifier is using 
+        prefix that increases a letter over time. This letter has a starting
+        value, a number of letters to increment by for each sequential naming,
+        and a value that represents whether or not this identifier is using
         capital letters or lower case letters.
         """
         self.start = start
         self.increment = increment
         self.caps = caps
+        self.current_identifier_value = None
 
-
-class Replacement:
-
-    def __init__(self, criteria, replace, text_type):
-        """Replacement Object
-        An instance of this class represents the data in a replacement.
-        A replacement consists of the criteria for a substring to be replaced
-        and the string to replace it with. It also has the text_type, which 
-        indicates if this replacement is happening to the file's extension,
-        name or both. 
+    def increment_id(self):
+        """Increment Identifier
+        This method will increase this object's current identifier value by the 
+        interval specified by the 'increment' member variable. 
+        Returns nothing.
         """
-        # initialize member variables.
-        self.criteria = criteria
-        self.replace = replace
-        self.text_type = text_type
+        pass
 
-    def get_next_id(self, current_id):
+
+class RandomStringIdentifier:
+
+    def __init__(self, character_length):
+        """Random String Identifier Object
+        An instance of this class represents an identifier for a suffix or
+        prefix that is made up of a random string of characters of a given
+        character length.
+        """
+        self.character_length = character_length
+        self.history = []
+
+    def get_next_id(self):
         """Get Next Identifier
-        This method will return the next identifier in the sequence based on the 
-        current identifier parameter and the increment and character length in this
-        object. 
+        This method will generate a new random string at this class' specified
+        character length. If that new identifier does not appear in this class' 
+        history of issued identifiers, then it is appended to that list and then
+        returned. Otherwise new random strings are generated until a unique 
+        identifier is found.
         """
         pass
 
@@ -286,8 +349,10 @@ class Replacement:
 # submission.
 def main():
     """Example Use Case
-    For the name scheme 'image_0001', 'image_0002', etc., 
+    For the name scheme 'image_0001', 'image_0002', etc.,
     we can use the following code.
+
+    THIS CODE DOES NOT WORK BTW
     """
     # define the files you want renamed
     fol = Folder(path='./images/')
