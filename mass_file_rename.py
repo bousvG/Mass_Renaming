@@ -1,22 +1,10 @@
 """Mass File Rename
 By Anthony, Nic, George, and Conor
 
-If you want to rename some files, first determine your
-naming scheme. Create a Scheme object that reflects this
-scheme.
-
-Next, create Folder objects that represent the folders
-where your files are. You can use these folder objects to
-spit out all or a of subset of the folder's contents as a
-list. This list will be input into the Renamer later.
-
-Now, create a Renamer object with your scheme. This object
-will be used to execute the renaming. Or rather, using the
-helper methods in the Renamer object, we instruct each file
-to rename itself a spefic name based on a given name scheme.
+This package allows for the mass renaming of files at a given directory
+following a defined name scheme. 
 """
 
-from calendar import c
 import os
 
 
