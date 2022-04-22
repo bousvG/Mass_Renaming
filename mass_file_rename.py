@@ -43,6 +43,7 @@ class File:
         if os.path.isfile(self.file_path):
             # if new_name is not already taken
             if not os.path.isfile(renamed_file_path):
+
                 # execute rename of file in system
                 os.rename(self.file_path, renamed_file_path)
 
@@ -64,23 +65,25 @@ class File:
 
 class Folder:
 
-    def __init__(self, path):
+    def __init__(self, folder_path):
         """Folder Object
         An instance of this class represents a Folder.
         A folder has a name, path, a list of folders it contains,
         and list of files it contains.
-        A folder can rename all the files to a spefic
+        A folder is used to organize and extract the group of files
+        you are looking to rename. 
         """
         # initialize member variables.
-        self.path = path
+        self.folder_path = folder_path
         self.name = self.get_name_from_path()
-        self.files, self.subfolders = self.read_in_contents()
+        self.files = self.read_in_contents()
 
     def get_name_from_path(self):
         """Get Name From Path
-        Get the name of this folder
+        Get the name of this folder from the path it was initialized with.
+        Return string representing the name of this folder. 
         """
-        pass
+        return os.path.split(self.folder_path)[1]
 
     def read_in_contents(self):
         """Read in Contents
@@ -88,7 +91,17 @@ class Folder:
         path.
         Returns a list of files and a list of subfolders.
         """
-        pass
+        list_of_file_names = [f for f in os.listdir(
+            self.folder_path) if os.path.isfile(os.path.join(self.folder_path, f))]
+
+        # use list of file names to create a file obj for each name
+        list_of_file_objects = []
+        for name in list_of_file_names:
+            file = File(file_path=os.path.join(self.folder_path, name))
+            list_of_file_objects.append(file)
+
+        # return complete list of all files in this folder
+        return list_of_file_objects
 
     def get_all_with_ext(self, criteria):
         """Get all with Extension
@@ -343,7 +356,7 @@ def main():
     THIS CODE DOES NOT WORK BTW
     """
     # define the files you want renamed
-    fol = Folder(path='./images/')
+    fol = Folder(folder_path='./images/')
     list_of_files = fol.get_all_with_ext('jpg')
 
     # define how you want the files renamed
