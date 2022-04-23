@@ -33,9 +33,9 @@ class TestFile(unittest.TestCase):
         # if the practice_files_path is a valid path
         if os.path.exists(pratice_files_path):
             # make test1, test2, test3
-            open(os.path.join(pratice_files_path, 'test1.txt'), 'w').close
-            open(os.path.join(pratice_files_path, 'test2.txt'), 'w').close
-            open(os.path.join(pratice_files_path, 'test3.txt'), 'w').close
+            open(os.path.join(pratice_files_path, 'test1.txt'), 'w').close()
+            open(os.path.join(pratice_files_path, 'test2.txt'), 'w').close()
+            open(os.path.join(pratice_files_path, 'test3.txt'), 'w').close()
 
     def test_file_rename(self):
         """Test File Rename
@@ -92,9 +92,9 @@ class TestFolder(unittest.TestCase):
         # if the practice_files_path is a valid path
         if os.path.exists(pratice_files_path):
             # make test1, test2, test3
-            open(os.path.join(pratice_files_path, 'test1.txt'), 'w').close
-            open(os.path.join(pratice_files_path, 'test2.txt'), 'w').close
-            open(os.path.join(pratice_files_path, 'test3.txt'), 'w').close
+            open(os.path.join(pratice_files_path, 'test1.txt'), 'w').close()
+            open(os.path.join(pratice_files_path, 'test2.txt'), 'w').close()
+            open(os.path.join(pratice_files_path, 'test3.txt'), 'w').close()
 
     def test_folder_init(self):
         """Test Folder Initializer

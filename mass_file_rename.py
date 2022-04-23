@@ -43,7 +43,6 @@ class File:
         if os.path.isfile(self.file_path):
             # if new_name is not already taken
             if not os.path.isfile(renamed_file_path):
-
                 # execute rename of file in system
                 os.rename(self.file_path, renamed_file_path)
 
@@ -76,7 +75,7 @@ class Folder:
         # initialize member variables.
         self.folder_path = folder_path
         self.name = self.get_name_from_path()
-        self.files = self.read_in_contents()
+        self.files = self.get_files_at_path()
 
     def get_name_from_path(self):
         """Get Name From Path
@@ -85,19 +84,22 @@ class Folder:
         """
         return os.path.split(self.folder_path)[1]
 
-    def read_in_contents(self):
-        """Read in Contents
-        Reads in the data from all files and subfolders in this folder's
-        path.
-        Returns a list of files and a list of subfolders.
+    def get_files_at_path(self):
+        """Get Files at Path
+        Reads in the data from all files in this folder's path.
+        Returns a list of files.
         """
+        # get a list of the names of all files in this folder
         list_of_file_names = [f for f in os.listdir(
             self.folder_path) if os.path.isfile(os.path.join(self.folder_path, f))]
 
-        # use list of file names to create a file obj for each name
         list_of_file_objects = []
-        for name in list_of_file_names:
-            file = File(file_path=os.path.join(self.folder_path, name))
+        # for every file in this folder
+        for file_name in list_of_file_names:
+            # create a new file object with the path to this file
+            file = File(file_path=os.path.join(self.folder_path, file_name))
+
+            # add this file to the list of file objects
             list_of_file_objects.append(file)
 
         # return complete list of all files in this folder
@@ -116,6 +118,12 @@ class Folder:
         contains the given criteria.
         """
         pass
+
+    def get_all(self):
+        """Get all
+        Returns a list of all files in this folder.
+        """
+        return self.files
 
 
 class Renamer:
@@ -190,8 +198,9 @@ class Scheme:
     def construct_new_name(self, file_name):
         """Construct New Name
         This method will contruct and return the next name in this name
-        scheme. File name may not be needed for some name schemes.
-        Returns new name.
+        scheme. file_name is not needed for name schemes without 
+        replacements.
+        Returns a new name.
         """
         pass
 
