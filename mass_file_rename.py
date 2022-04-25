@@ -448,29 +448,3 @@ class RandomStringIdentifier:
         identifier is found.
         """
         pass
-
-
-# main is strictly for demonstation purposes.
-def main():
-    """Example Use Case
-    For the name scheme 'image_0001', 'image_0002', etc.,
-    we can use the following code.
-
-    THIS CODE DOES NOT WORK BTW
-    """
-    # define the files you want renamed
-    fol = Folder(folder_path='./images/')
-    list_of_files = fol.get_all_with_ext('jpg')
-
-    # define how you want the files renamed
-    idf = NumericalIdentifier(start=1, increment=1, character_length=4)
-    suf = Suffix(identifier=idf, separator='_')
-    sch = Scheme(root='image', suffix=suf)
-
-    # rename the files
-    ren = Renamer(sch)
-    ren.rename_all(list_of_files)
-
-
-if __name__ == "__main__":
-    main()
