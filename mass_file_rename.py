@@ -75,7 +75,7 @@ class Folder:
         # initialize member variables.
         self.folder_path = folder_path
         self.name = self.get_name_from_path()
-        self.files = self.get_files_at_path()
+        self.files = self.read_in_files_at_path()
 
     def get_name_from_path(self):
         """Get Name From Path
@@ -84,8 +84,8 @@ class Folder:
         """
         return os.path.split(self.folder_path)[1]
 
-    def get_files_at_path(self):
-        """Get Files at Path
+    def read_in_files_at_path(self):
+        """Read in Files at Path
         Reads in the data from all files in this folder's path.
         Returns a list of files.
         """
@@ -143,7 +143,9 @@ class Renamer:
         the new name from this object's name scheme.
         Returns nothing.
         """
-        pass
+        for file in files:
+            new_name = self.scheme.construct_new_name(file.name)
+            file.change_name_to(new_name)
 
     def rename_if_contains(self, criteria, files):
         """Rename If Contains
@@ -202,39 +204,43 @@ class Scheme:
         replacements.
         Returns a new name.
         """
-        pass
+        # complete the appropriate actions for all scheme parameters
+
+        # replacement
+        if self.replacement is not None:
+            new_name = self.replacement.get_new_name(file_name)
+            self.root = new_name
+
+        # prefix
+        pre = self.prefix.get_new_prefix() if self.prefix is not None else ''
+
+        # suffix
+        suf = self.suffix.get_new_suffix() if self.suffix is not None else ''
+
+        # return fully constructed new name
+        return f'{pre}{self.root}{suf}'
 
 
 class Replacement:
 
-    def __init__(self, criteria, replace, text_type):
+    def __init__(self, criteria, replace):
         """Replacement Object
         An instance of this class represents the data in a replacement.
         A replacement consists of the criteria for a substring to be replaced
-        and the string to replace it with. It also has the text_type, which
-        indicates if this replacement is happening to the file's extension,
-        name or both.
+        and the string to replace it with. 
         """
         # initialize member variables.
         self.criteria = criteria
         self.replace = replace
-        self.text_type = text_type
 
     def get_new_name(self, current_name):
         """Get New Name
-        This method will replace whatever substring in the current_name specified
-        by this class' criteria value with this class' replace value.
+        This method will replace the first occurence of whatever substring in the 
+        current_name specified by this class' criteria value with this class' 
+        replace value.
         Returns this modified version of current_name.
         """
-        pass
-
-    def get_new_ext(self, current_ext):
-        """Get New Extension
-        This method will replace whatever substring in the current_ext specified
-        by this class' criteria value with this class' replace value.
-        Returns this modified version of current_ext.
-        """
-        pass
+        return current_name.replace(self.criteria, self.replace, 1)
 
 
 class Prefix:
@@ -253,12 +259,19 @@ class Prefix:
         self.identifier = identifier
         self.separator = separator
 
-    def get_new_prefix(self, current_name):
+    def get_new_prefix(self):
         """Get New Prefix
         This method will return the combination of this class' separator
-        whatever the next identifier value is.
+        and whatever the next identifier value is.
         """
-        pass
+        # get the next identifier in the sequence
+        idf = self.identifier.get_next_id()
+
+        # increment identifier value for next file
+        self.identifier.increment_id()
+
+        # return constructed suffix
+        return idf + self.separator
 
 
 class Suffix:
@@ -277,12 +290,19 @@ class Suffix:
         self.identifier = identifier
         self.separator = separator
 
-    def get_new_suffix(self, current_name):
+    def get_new_suffix(self):
         """Get New Suffix
         This method will return the combination of this class' separator
-        whatever the next identifier value is.
+        and whatever the next identifier value is.
         """
-        pass
+        # get the next identifier in the sequence
+        idf = self.identifier.get_next_id()
+
+        # increment identifier value for next file
+        self.identifier.increment_id()
+
+        # return constructed suffix
+        return self.separator + idf
 
 
 class NumericalIdentifier:
@@ -298,20 +318,40 @@ class NumericalIdentifier:
         self.start = start
         self.increment = increment
         self.character_length = character_length
-        self.current_identifier_value = None
+        self.current_identifier_value = start
 
     def increment_id(self):
         """Increment Identifier
-        This method will increase this object's current identifier value by the 
-        interval specified by the 'increment' member variable. 
+        This method will increase the current_identifier_value_by the interval specified
+        by self.increment.
         Returns nothing.
         """
-        pass
+        self.current_identifier_value += self.increment
+
+    def get_next_id(self):
+        """Get Next Identifier
+        Prepares and returns the current_identifier_value, which should be the
+        next id in the sequence for this name scheme. 
+        If this id must be of a certain character length, then the extra space
+        is filled in by zeros
+        """
+        # get current id in string form
+        str_id = str(self.current_identifier_value)
+
+        # if this id needs to be of a certain character length
+        if self.character_length is not None:
+            # if this id is not at the length it should be already
+            if len(str_id) < self.character_length:
+                # fill id with zeros to correct the character length
+                str_id = str_id.rjust(self.character_length, '0')
+
+        # return prepared id
+        return str_id
 
 
 class AlphabeticalIdentifier:
 
-    def __init__(self, start='A', increment=1, caps=True):
+    def __init__(self, increment=1, caps=True):
         """Alphabetical Identifier Object
         An instance of this class represents an identifier for a suffix or
         prefix that increases a letter over time. This letter has a starting
@@ -319,18 +359,73 @@ class AlphabeticalIdentifier:
         and a value that represents whether or not this identifier is using
         capital letters or lower case letters.
         """
-        self.start = start
         self.increment = increment
         self.caps = caps
-        self.current_identifier_value = None
+        self.current_identifier_value = 'A'
+
+    def get_next_id(self):
+        """Get Next Identifier
+        Prepares and returns the current_identifier_value, which should be the
+        next id in the sequence for this name scheme. Corrects for upper or 
+        lower case identifiers.
+        """
+        if self.caps:
+            return self.current_identifier_value.upper()
+        else:
+            return self.current_identifier_value.lower()
 
     def increment_id(self):
         """Increment Identifier
-        This method will increase this object's current identifier value by the 
-        interval specified by the 'increment' member variable. 
+        This method will increase the current_identifier_value by the interval specified
+        by self.increment.
         Returns nothing.
         """
-        pass
+        next_id = ''
+        # get the next id for however many steps defined by the increment parameter
+        for _ in range(self.increment):
+            next_id = self.get_next_letter(self.current_identifier_value)
+
+        self.current_identifier_value = next_id
+
+    def get_next_letter(self, letter_id):
+        """Get Next Letter
+        This method uses recursion to get the next letter in a sequence of letters.
+        Can rollover value in the case that the current letter is z, so the next
+        letters would be aa. Cases with more that two letters will work rollover
+        similarly (EX: ABZ -> ACA, etc.)
+        Returns the next letter or letter in the sequence.
+        """
+        if letter_id == '':
+            return ''
+
+        # initialize a list of letters in alphabetic order
+        letters = list('ABCDEFGHIJKLMNOPQRSTUVWXYZ')
+
+        # initialize front of id and last letter id
+        last_letter = list(letter_id)[-1]
+        front_letters = ''
+
+        # if this letter_id is longer than 1 character, we may need to roll over
+        if (len(letter_id) > 1):
+            # get the string of all letter before the last letter
+            for letter in list(letter_id):
+                # add the next letter to front_letters
+                front_letters = front_letters + letter
+
+                # break when all letters have been added besides the last
+                if len(front_letters) == (len(letter_id) - 1):
+                    break
+
+        # recursively
+        for i in range(len(letters)):
+            # if the current id val ends with the current letter
+            if last_letter.casefold() == letters[i].casefold():
+                # if the next letter is B-Z
+                if i < (len(letters) - 1):
+                    return front_letters + letters[i+1]
+                else:
+                    # Since the next letter is A, we will rollover to add a new letter to the front
+                    return self.get_next_letter(front_letters) + 'A'
 
 
 class RandomStringIdentifier:
@@ -355,8 +450,7 @@ class RandomStringIdentifier:
         pass
 
 
-# main is strictly for testing purposes and should not be included in the final
-# submission.
+# main is strictly for demonstation purposes.
 def main():
     """Example Use Case
     For the name scheme 'image_0001', 'image_0002', etc.,

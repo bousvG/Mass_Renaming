@@ -1,6 +1,6 @@
 import unittest
 import os
-from mass_file_rename import File, Folder, Renamer, Scheme
+from mass_file_rename import File, Folder, Renamer, Scheme, NumericalIdentifier, AlphabeticalIdentifier, RandomStringIdentifier, Suffix, Prefix, Replacement
 
 
 class TestFile(unittest.TestCase):
@@ -110,6 +110,73 @@ class TestFolder(unittest.TestCase):
 
         # check folder object has the right number of files in practice_files
         self.assertEqual(len(test_fol.files), 3)
+
+
+class TestRenamer(unittest.TestCase):
+
+    def setUp(self):
+        """Set up practice_folder to have three files contained 
+        with the name scheme 'test1.txt', 'test2.txt', and 
+        'test3.txt'.
+        These are the initial conditions for all our basic tests.
+        """
+        # get the directory of this project
+        current_dir = os.path.dirname(__file__)
+        pratice_files_path = os.path.join(current_dir, './practice_files')
+
+        # get a list of files in this directory
+        files_names_in_pf_folder = [f for f in os.listdir(
+            pratice_files_path) if os.path.isfile(os.path.join(pratice_files_path, f))]
+
+        # if there are files in practice_files
+        if files_names_in_pf_folder != []:
+            for file in files_names_in_pf_folder:
+                # delete any files that are currently in this folder
+                file_path = os.path.join(pratice_files_path, file)
+                try:
+                    os.remove(file_path)
+                except OSError as e:
+                    print(f"Error: {file_path} : {e.strerror}")
+
+        # now there are no files in practice_files, so fill with proper files
+        # if the practice_files_path is a valid path
+        if os.path.exists(pratice_files_path):
+            # make test1, test2, test3
+            open(os.path.join(pratice_files_path, 'test1.txt'), 'w').close()
+            open(os.path.join(pratice_files_path, 'test2.txt'), 'w').close()
+            open(os.path.join(pratice_files_path, 'test3.txt'), 'w').close()
+
+    def test_basic_renaming(self):
+        """Test Basic Renaming
+        Tests the Renamer object for the basic use case of renaming the files 
+        in practice_files to 'image_0001', 'image_0002', etc.
+        """
+        # make a usable path for the folder object
+        current_dir = os.path.dirname(__file__)
+        fol_path = os.path.join(current_dir, './practice_files')
+
+        # create new folder object
+        test_fol = Folder(folder_path=fol_path)
+
+        # extract all files from this folder
+        test_files = test_fol.get_all()
+
+        # create the proper name scheme for this test
+        test_identifier = AlphabeticalIdentifier()
+        test_suffix = Suffix(identifier=test_identifier, separator='_')
+        test_scheme = Scheme(root='image', suffix=test_suffix)
+
+        # create Renamer for test
+        test_renamer = Renamer(test_scheme)
+
+        # test Renamer
+        test_renamer.rename_all(files=test_files)
+
+        # get all new files at the same folder
+        resulting_files = test_fol.read_in_files_at_path()
+
+        # check folder object has the right number of files in practice_files
+        self.assertEqual(len(resulting_files), 3)
 
 
 if __name__ == '__main__':
