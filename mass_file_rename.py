@@ -143,8 +143,11 @@ class Renamer:
         the new name from this object's name scheme.
         Returns nothing.
         """
+        # for every file in the given list of files
         for file in files:
+            # get the new name from this object's name scheme
             new_name = self.scheme.construct_new_name(file.name)
+            #
             file.change_name_to(new_name)
 
     def rename_if_contains(self, criteria, files):
@@ -154,7 +157,10 @@ class Renamer:
         object's name scheme.
         Returns nothing.
         """
-        pass
+        for file in files:
+
+            new_name = self.scheme.construct_new_name(file.name)
+            file.change_name_to(new_name)
 
     def rename_if_ext(self, criteria, files):
         """Rename If Extension
@@ -267,9 +273,6 @@ class Prefix:
         # get the next identifier in the sequence
         idf = self.identifier.get_next_id()
 
-        # increment identifier value for next file
-        self.identifier.increment_id()
-
         # return constructed suffix
         return idf + self.separator
 
@@ -298,9 +301,6 @@ class Suffix:
         # get the next identifier in the sequence
         idf = self.identifier.get_next_id()
 
-        # increment identifier value for next file
-        self.identifier.increment_id()
-
         # return constructed suffix
         return self.separator + idf
 
@@ -320,6 +320,10 @@ class NumericalIdentifier:
         self.character_length = character_length
         self.current_identifier_value = start
 
+        # lowest value for increment allowed is 1
+        if increment <= 0:
+            self.increment = 1
+
     def increment_id(self):
         """Increment Identifier
         This method will increase the current_identifier_value_by the interval specified
@@ -330,10 +334,10 @@ class NumericalIdentifier:
 
     def get_next_id(self):
         """Get Next Identifier
-        Prepares and returns the current_identifier_value, which should be the
-        next id in the sequence for this name scheme. 
+        Prepares and returns the value of current_identifier_value, and increments
+        current_identifier_value member variable of this object.
         If this id must be of a certain character length, then the extra space
-        is filled in by zeros
+        is filled in by zeros.
         """
         # get current id in string form
         str_id = str(self.current_identifier_value)
@@ -345,23 +349,33 @@ class NumericalIdentifier:
                 # fill id with zeros to correct the character length
                 str_id = str_id.rjust(self.character_length, '0')
 
+        # increment id
+        self.increment_id()
+
         # return prepared id
         return str_id
 
 
 class AlphabeticalIdentifier:
 
-    def __init__(self, increment=1, caps=True):
+    def __init__(self, start='A', increment=1, caps=True):
         """Alphabetical Identifier Object
         An instance of this class represents an identifier for a suffix or
         prefix that increases a letter over time. This letter has a starting
         value, a number of letters to increment by for each sequential naming,
         and a value that represents whether or not this identifier is using
         capital letters or lower case letters.
+        Starts at A. Increments are allowed to be integers greater than 0. All
+        else will be initialized to 1.
         """
         self.increment = increment
+        self.start = start
         self.caps = caps
-        self.current_identifier_value = 'A'
+        self.current_identifier_value = start
+
+        # lowest value for increment allowed is 1
+        if (increment <= 0) or (type(increment) is not int()):
+            self.increment = 1
 
     def get_next_id(self):
         """Get Next Identifier
@@ -370,21 +384,30 @@ class AlphabeticalIdentifier:
         lower case identifiers.
         """
         if self.caps:
-            return self.current_identifier_value.upper()
+            # capture current id value as a string
+            str_id = self.current_identifier_value.upper()
+
         else:
-            return self.current_identifier_value.lower()
+            # capture current id value as a string
+            str_id = self.current_identifier_value.lower()
+
+        # increment self
+        self.increment_id()
+
+        # return prepared string id
+        return str_id
 
     def increment_id(self):
         """Increment Identifier
         This method will increase the current_identifier_value by the interval specified
-        by self.increment.
+        by the increment parameter of this class.
         Returns nothing.
         """
-        next_id = ''
         # get the next id for however many steps defined by the increment parameter
         for _ in range(self.increment):
             next_id = self.get_next_letter(self.current_identifier_value)
 
+        # set this object's current id value to this incremented id
         self.current_identifier_value = next_id
 
     def get_next_letter(self, letter_id):
@@ -396,7 +419,7 @@ class AlphabeticalIdentifier:
         Returns the next letter or letter in the sequence.
         """
         if letter_id == '':
-            return ''
+            return 'A'
 
         # initialize a list of letters in alphabetic order
         letters = list('ABCDEFGHIJKLMNOPQRSTUVWXYZ')
@@ -416,16 +439,16 @@ class AlphabeticalIdentifier:
                 if len(front_letters) == (len(letter_id) - 1):
                     break
 
-        # recursively
+        # for every letter of the alphabet (in alphabetical order)
         for i in range(len(letters)):
             # if the current id val ends with the current letter
             if last_letter.casefold() == letters[i].casefold():
-                # if the next letter is B-Z
+                # if this letter is A through Y
                 if i < (len(letters) - 1):
                     return front_letters + letters[i+1]
                 else:
-                    # Since the next letter is A, we will rollover to add a new letter to the front
-                    return self.get_next_letter(front_letters) + 'A'
+                    # else this letter is Z, we will rollover to add a new letter to the front
+                    return f'{self.get_next_letter(front_letters)}A'
 
 
 class RandomStringIdentifier:

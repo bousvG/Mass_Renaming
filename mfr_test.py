@@ -162,9 +162,9 @@ class TestRenamer(unittest.TestCase):
         test_files = test_fol.get_all()
 
         # create the proper name scheme for this test
-        test_identifier = AlphabeticalIdentifier()
-        test_suffix = Suffix(identifier=test_identifier, separator='_')
-        test_scheme = Scheme(root='image', suffix=test_suffix)
+        test_identifier = NumericalIdentifier(character_length=4)
+        test_suffix = Suffix(identifier=test_identifier, separator='-')
+        test_scheme = Scheme(root='document', suffix=test_suffix)
 
         # create Renamer for test
         test_renamer = Renamer(test_scheme)
