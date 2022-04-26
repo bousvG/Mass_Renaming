@@ -60,6 +60,9 @@ class File:
         Returns nothing.
         """
         pass
+    
+    def get_name(self):
+        return self.name
 
 
 class Folder:
@@ -117,7 +120,13 @@ class Folder:
         Returns a list of all files in this folder with a name that
         contains the given criteria.
         """
-        pass
+        returnFiles = []
+        allFiles = self.get_all()
+        for fileObj in allFiles:
+            if criteria in fileObj.get_name():
+                returnFiles.append(fileObj)
+        
+        return returnFiles
 
     def get_all(self):
         """Get all
