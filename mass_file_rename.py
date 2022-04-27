@@ -116,7 +116,13 @@ class Folder:
         Returns a list of all files in this folder with an extension
         that matches the given criteria.
         """
-        pass
+        returnFiles = []
+        allFiles = self.get_all()
+        for fileObj in allFiles:
+            if criteria in fileObj.get_ext():
+                returnFiles.append(fileObj)
+
+        return returnFiles
 
     def get_all_contains(self, criteria):
         """Get all Contains
