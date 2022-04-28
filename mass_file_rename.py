@@ -237,7 +237,6 @@ class Scheme:
         Returns a new name.
         """
         # complete the appropriate actions for all scheme parameters
-
         # replacement
         if self.replacement is not None:
             new_name = self.replacement.get_new_name(file_name)
@@ -391,8 +390,9 @@ class AlphabeticalIdentifier:
         value, a number of letters to increment by for each sequential naming,
         and a value that represents whether or not this identifier is using
         capital letters or lower case letters.
-        Starts at A. Increments are allowed to be integers greater than 0. All
-        else will be initialized to 1.
+        Starts at A. Can be customized to start at any letter, and even sequences
+        of letters (like 'AAAA'). Increments are only allowed to be integers greater 
+        than 0. All else will be initialized to 1. Identifiers only Increase
         """
         self.increment = increment
         self.start = start
@@ -400,7 +400,7 @@ class AlphabeticalIdentifier:
         self.current_identifier_value = start
 
         # lowest value for increment allowed is 1
-        if (increment <= 0) or (type(increment) is not int()):
+        if (type(increment) is not int()) or (increment <= 0):
             self.increment = 1
 
     def get_next_id(self):
@@ -409,15 +409,16 @@ class AlphabeticalIdentifier:
         next id in the sequence for this name scheme. Corrects for upper or 
         lower case identifiers.
         """
+        # if this object has been configured to use all capital letters
         if self.caps:
             # capture current id value as a string
             str_id = self.current_identifier_value.upper()
-
+        # else this object has been configured to use all lowercase letters
         else:
             # capture current id value as a string
             str_id = self.current_identifier_value.lower()
 
-        # increment self
+        # increment identifier member variable for this object
         self.increment_id()
 
         # return prepared string id
@@ -456,14 +457,14 @@ class AlphabeticalIdentifier:
 
         # if this letter_id is longer than 1 character, we may need to roll over
         if (len(letter_id) > 1):
-            # get the string of all letter before the last letter
+            # for the string of all letters before the last letter
             for letter in list(letter_id):
                 # add the next letter to front_letters
                 front_letters = front_letters + letter
 
                 # break when all letters have been added besides the last
                 if len(front_letters) == (len(letter_id) - 1):
-                    break
+                    break  # the purpose of this is to produce a
 
         # for every letter of the alphabet (in alphabetical order)
         for i in range(len(letters)):
@@ -471,9 +472,11 @@ class AlphabeticalIdentifier:
             if last_letter.casefold() == letters[i].casefold():
                 # if this letter is A through Y
                 if i < (len(letters) - 1):
+                    # concatenate the next letter with the front letters
                     return front_letters + letters[i+1]
+                # else this letter is Z, we will rollover to add a new letter to the front
                 else:
-                    # else this letter is Z, we will rollover to add a new letter to the front
+                    # concatenate with the rolled over front letters
                     return f'{self.get_next_letter(front_letters)}A'
 
 
