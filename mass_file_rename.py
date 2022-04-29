@@ -392,7 +392,8 @@ class AlphabeticalIdentifier:
         capital letters or lower case letters.
         Starts at A. Can be customized to start at any letter, and even sequences
         of letters (like 'AAAA'). Increments are only allowed to be integers greater 
-        than 0. All else will be initialized to 1. Identifiers only Increase
+        than 0. All else will be initialized to 1. Alphabetical Identifiers only 
+        increase.
         """
         self.increment = increment
         self.start = start
@@ -478,25 +479,3 @@ class AlphabeticalIdentifier:
                 else:
                     # concatenate with the rolled over front letters
                     return f'{self.get_next_letter(front_letters)}A'
-
-
-class RandomStringIdentifier:
-
-    def __init__(self, character_length):
-        """Random String Identifier Object
-        An instance of this class represents an identifier for a suffix or
-        prefix that is made up of a random string of characters of a given
-        character length.
-        """
-        self.character_length = character_length
-        self.history = []
-
-    def get_next_id(self):
-        """Get Next Identifier
-        This method will generate a new random string at this class' specified
-        character length. If that new identifier does not appear in this class' 
-        history of issued identifiers, then it is appended to that list and then
-        returned. Otherwise new random strings are generated until a unique 
-        identifier is found.
-        """
-        pass
