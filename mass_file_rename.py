@@ -59,6 +59,7 @@ class File:
         Changes this file's extension to new_ext.
         Returns nothing.
         """
+        self.ext = new_ext
         pass
 
     def get_name(self):
