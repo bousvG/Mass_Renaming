@@ -60,7 +60,6 @@ class File:
         Returns nothing.
         """
         self.ext = new_ext
-        pass
 
     def get_name(self):
         return self.name
