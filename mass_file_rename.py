@@ -446,7 +446,7 @@ class AlphabeticalIdentifier:
         similarly (EX: ABZ -> ACA, etc.)
         Returns the next letter or letter in the sequence.
         """
-        if letter_id=='':
+        if letter_id == '':
             return 'A'
 
         # initialize a list of letters in alphabetic order
@@ -454,7 +454,7 @@ class AlphabeticalIdentifier:
 
         # initialize front of id and last letter id
         last_letter = list(letter_id)[-1]
-        front_letters=''
+        front_letters = ''
 
         # if this letter_id is longer than 1 character, we may need to roll over
         if (len(letter_id) > 1):
